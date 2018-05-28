@@ -1,0 +1,73 @@
+FROM daocloud.io/ubuntu:14.04
+
+LABEL maintainer="shiknaon <shikanon@foxmail.com>"
+
+RUN apt-get update && apt-get install -y linux-tools-generic \
+        libbz2-dev \
+        python-dev \
+        scons \
+        unzip \
+        libtool \
+        liblzma-dev \
+        libblas-dev \
+        make \
+        automake \
+        ccache \
+        ant \
+        openjdk-7-jdk \
+        libcppunit-dev \
+        doxygen \
+        libcrypto++-dev \
+        libACE-dev \
+        gfortran \
+        liblapack-dev \
+        libevent-dev \
+        libssh2-1-dev \
+        libicu-dev \
+        libv8-dev \
+        g++ \
+        google-perftools \
+        libgoogle-perftools-dev \
+        zlib1g-dev \
+        git \
+        pkg-config \
+        valgrind \
+        autoconf \
+        libcurl4-openssl-dev \
+        cmake \
+        libsigc++-2.0-dev \
+        time \
+        tmux \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p $HOME/local/bin && \
+    mkdir -p $HOME/local/lib
+
+# set enviroment
+ENV PATH $HOME/local/bin:$PATH
+ENV LD_LIBRARY_PATH $HOME/local/lib:$LD_LIBRARY_PATH
+ENV PKG_CONFIG_PATH $HOME/local/lib/pkgconfig/:$HOME/local/lib/pkg-config/
+
+
+# change work PATH
+WORKDIR /root
+
+RUN git clone http://192.168.2.115:18080/shikanon520/rtbkit-deps.git
+
+WORKDIR /root/rtbkit-deps
+
+RUN git submodule update --init
+
+RUN make all NODEJS_ENABLED=0
+
+WORKDIR /root
+
+RUN git clone http://192.168.2.115:18080/shikanon520/rtbkit.git
+
+WORKDIR /root/rtbkit
+
+RUN cp jml-build/sample.local.mk local.mk
+
+RUN make compile NODEJS_ENABLED=0
