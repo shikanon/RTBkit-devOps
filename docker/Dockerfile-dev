@@ -54,17 +54,22 @@ ENV PKG_CONFIG_PATH $HOME/local/lib/pkgconfig/:$HOME/local/lib/pkg-config/
 # change work PATH
 WORKDIR /root
 
-RUN git clone http://192.168.2.115:18080/shikanon520/rtbkit-deps.git
+RUN git clone https://github.com/shikanon/rtbkit-deps.git
 
 WORKDIR /root/rtbkit-deps
 
 RUN git submodule update --init
 
+RUN chmod +x ./boost_1_57_0/bootstrap.sh
+
+RUN chmod +x ./boost_1_57_0/tools/build/src/engine/build.sh
+RUN chmod +x ./boost_1_57_0/tools/build/bootstrap.sh
+
 RUN make all NODEJS_ENABLED=0
 
 WORKDIR /root
 
-RUN git clone http://192.168.2.115:18080/shikanon520/rtbkit.git
+RUN git clone https://github.com/shikanon/rtbkit.git
 
 WORKDIR /root/rtbkit
 
