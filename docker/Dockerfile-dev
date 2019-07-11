@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install -y linux-tools-generic \
         libsigc++-2.0-dev \
         time \
         tmux \
+        libboost-dev \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -66,6 +67,8 @@ RUN chmod +x ./boost_1_57_0/tools/build/src/engine/build.sh
 RUN chmod +x ./boost_1_57_0/tools/build/bootstrap.sh
 
 RUN make all NODEJS_ENABLED=0
+
+RUN cp ./protobuf/src/protoc /usr/bin
 
 WORKDIR /root
 
